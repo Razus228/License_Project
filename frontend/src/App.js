@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./index.css";
 
 function CarSearchWithCarQuery() {
   const [query, setQuery] = useState("");
@@ -8,58 +9,79 @@ function CarSearchWithCarQuery() {
   const handleSearch = async () => {
     setLoading(true);
     const { make, year, body } = extractKeywords(query);
-  
+
     if (!make) {
       alert("Please include a car brand (like Toyota, Ford, BMW).");
       setLoading(false);
       return;
     }
-  
+
     try {
       let url = `https://www.carqueryapi.com/api/0.3/?cmd=getModels&make=${encodeURIComponent(make)}`;
-  
       if (year) {
         url += `&year=${year}`;
       }
-  
-      const response = await fetch(`https://cors-anywhere.herokuapp.com/https://www.carqueryapi.com/api/0.3/?cmd=getModels&make=${encodeURIComponent(make)}`);
+      url += `&sold_in_us=1`;
+
+      const response = await fetch(
+        `https://cors-anywhere.herokuapp.com/${url}`
+      );
 
       const textData = await response.text();
-  
       const cleanText = textData
-        .replace('var carquery = ', '')
-        .replace(/;\s*$/, '');
-  
+        .replace("var carquery = ", "")
+        .replace(/;\s*$/, "");
+
       const data = JSON.parse(cleanText);
       const models = data.Models || [];
-  
-      console.log("Fetched Models:", models);
-  
+
       let filteredCars = models;
       if (body) {
-        filteredCars = models.filter(car => car.model_body && car.model_body.toLowerCase().includes(body));
+        filteredCars = models.filter(
+          (car) =>
+            car.model_body &&
+            car.model_body.toLowerCase().includes(body.toLowerCase())
+        );
       }
-  
-      setCars(filteredCars.slice(0, 6)); // only first 6
+
+      setCars(filteredCars.slice(0, 6));
     } catch (error) {
       console.error("Error fetching cars:", error);
     } finally {
       setLoading(false);
     }
   };
-  
 
-  // Basic "NLP" extraction
   const extractKeywords = (sentence) => {
-    const makes = ["Toyota", "Honda", "Ford", "Chevrolet", "Nissan", "BMW", "Mercedes", "Audi", "Kia", "Hyundai"];
-    const bodyTypes = ["sedan", "coupe", "suv", "truck", "van", "convertible", "wagon", "hatchback"];
+    const makes = [
+      "Toyota",
+      "Honda",
+      "Ford",
+      "Chevrolet",
+      "Nissan",
+      "BMW",
+      "Mercedes",
+      "Audi",
+      "Kia",
+      "Hyundai",
+    ];
+    const bodyTypes = [
+      "sedan",
+      "coupe",
+      "suv",
+      "truck",
+      "van",
+      "convertible",
+      "wagon",
+      "hatchback",
+    ];
     const lowerSentence = sentence.toLowerCase();
 
     let detectedMake = null;
     let detectedYear = null;
     let detectedBody = null;
 
-    makes.forEach(originalMake => {
+    makes.forEach((originalMake) => {
       if (lowerSentence.includes(originalMake.toLowerCase())) {
         detectedMake = originalMake;
       }
@@ -70,7 +92,7 @@ function CarSearchWithCarQuery() {
       detectedYear = yearMatch[0];
     }
 
-    bodyTypes.forEach(type => {
+    bodyTypes.forEach((type) => {
       if (lowerSentence.includes(type)) {
         detectedBody = type;
       }
@@ -80,36 +102,37 @@ function CarSearchWithCarQuery() {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Car Finder (with CarQuery API + NLP)</h1>
-
-      <input
-        type="text"
-        placeholder="Describe your car (e.g., 'I want a 2024 Toyota sedan')"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="border p-2 rounded w-full mb-4"
-      />
-
-      <button
-        onClick={handleSearch}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Search
-      </button>
-
-      {loading && <p className="mt-4">Loading...</p>}
-
-      <ul className="mt-4">
-        {cars.length === 0 && !loading && <p>No cars found. Try another search!</p>}
-        {cars.map((car, index) => (
-          <li key={index} className="mb-2 border-b pb-2">
-            {car.make_display} {car.model_name} ({car.model_year}) - {car.model_body}
-          </li>
-        ))}
-      </ul>
+    <div className="flex-center">
+      <div className="card">
+        <h1 className="text-2xl font-bold mb-6">Car Finder</h1>
+        <input
+          type="text"
+          placeholder="Describe your car (e.g., '2024 Toyota SUV')"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="border border-gray-300 p-3 rounded w-full mb-4"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 w-full"
+        >
+          Search
+        </button>
+  
+        {loading && <p className="mt-4">Loading...</p>}
+  
+        <ul className="mt-6 text-left">
+          {cars.length === 0 && !loading && (
+            <p className="text-gray-500">No cars found. Try another search!</p>
+          )}
+          {cars.map((car, index) => (
+            <p key={index} className="mb-3 border-b pb-2">
+              {car.make_display} {car.model_name} ({car.model_year}) – {car.model_body}
+            </p>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
-
 export default CarSearchWithCarQuery;
