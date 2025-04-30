@@ -4,6 +4,7 @@ function CarSearchWithCarQuery() {
   const [query, setQuery] = useState("");
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const handleSearch = async () => {
     setLoading(true);
     const { make, year, body } = extractKeywords(query);
@@ -22,16 +23,15 @@ function CarSearchWithCarQuery() {
       }
   
       const response = await fetch(`https://cors-anywhere.herokuapp.com/https://www.carqueryapi.com/api/0.3/?cmd=getModels&make=${encodeURIComponent(make)}`);
+
       const textData = await response.text();
-
-// 💥 Correctly clean the weird CarQuery API text
+  
       const cleanText = textData
-        .replace('var carquery = ', '') // remove JS variable declaration
-        .replace(/;\s*$/, '');           // remove semicolon at the end
-
-      const data = JSON.parse(cleanText); // finally parse clean JSON
+        .replace('var carquery = ', '')
+        .replace(/;\s*$/, '');
+  
+      const data = JSON.parse(cleanText);
       const models = data.Models || [];
-
   
       console.log("Fetched Models:", models);
   
