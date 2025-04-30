@@ -127,7 +127,7 @@ function CarSearchWithCarQuery() {
           )}
           {cars.map((car, index) => (
             <p key={index} className="mb-3 border-b pb-2">
-              {car.make_display} {car.model_name} ({car.model_year}) – {car.model_body}
+              {car.make_display} {car.model_name} ({car.model_year}) {car.model_body}
             </p>
           ))}
         </ul>
