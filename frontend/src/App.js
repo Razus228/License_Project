@@ -67,12 +67,17 @@ function CarSearchWithCarQuery() {
 
   return (
     <div className="app-container">
-      <div className="ribbon">🚗 Car Search System</div>
+      <div className="ribbon"> 
+        
+        <h3>🚗 Car Search System</h3>
+        
+
+      </div>
+      
       <div className="search-container">
-        <h1>Car Finder</h1>
         <input
           type="text"
-          placeholder="e.g., Toyota SUV 200hp"
+          placeholder="e.g., Toyota 1985"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
