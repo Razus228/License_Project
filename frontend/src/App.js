@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "./index.css";
 // import Search from "./Components/SearchComponent/Search";
-import Fuse from "fuse.js"
+import Ribbon from "./Components/Ribbon";
+import About from "./Components/About";
+import Login from "./Components/Login";
+import Comparison from "./Components/Comparison";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 
 function CarSearchWithCarQuery() {
   const [query, setQuery] = useState("");
@@ -9,17 +14,9 @@ function CarSearchWithCarQuery() {
   const [loading, setLoading] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
 
-  const fuzzySearch = (data, keyword, key = "model_name") => {
-  const fuse = new Fuse(data, {
-    keys: [key],
-      threshold: 0.4,
-    });
-    return fuse.search(keyword).map(result => result.item);
-  };
-
   const handleSearch = async () => {
   setLoading(true);
-  const { make, year, model } = extractKeywords(query);
+  const { make, year, model, minHorsepower, bodyType } = extractKeywords(query);
 
   if (!make) {
     alert("Please include a car brand (like Toyota, Ford, BMW).");
@@ -47,7 +44,17 @@ function CarSearchWithCarQuery() {
       .replace(/;\s*$/, "");
     const data = JSON.parse(cleanText);
 
-    setCars(data.Trims || []);
+    let results = data.Trims || [];
+
+    if (minHorsepower) {
+      results = results.filter((car) => parseInt(car.model_engine_power_ps) > minHorsepower);
+    }
+
+    if (bodyType) {
+      results = results.filter((car) => String(car.model_body) === bodyType);
+    }
+
+    setCars(results);
     setSelectedCar(null);
   } catch (error) {
     console.error("Error fetching cars:", error);
@@ -61,13 +68,20 @@ function CarSearchWithCarQuery() {
     const makes = [
       "Toyota", "Honda", "Ford", "Chevrolet", "Nissan",
       "BMW", "Mercedes-Benz", "Audi", "Kia", "Hyundai",
-      "Dodge"
+      "Dodge", "Acura", "Porsche", "Subaru", "Volkswagen",
+      "Mazda", "Lexus"
     ];
 
     const models = [
-      "Corolla", "Camry", "Avalon", "Civic", "Accord", "Mustang", "Explorer",
-      "F-150", "Malibu", "Altima", "Maxima", "X5", "X3", "C-Class", "A4", "Soul", "Elantra", "4Runner",
-      "Viper"
+      "Corolla", "Camry", "Avalon", "Civic", "Accord", "CR-V", "Mustang", "Explorer", "Optima", "Rio",
+      "F-150", "Malibu", "Altima", "370Z", "Maxima", "X5", "X3", "C-Class", "A4", "Soul", "Elantra", "4Runner",
+      "Viper", "Cayenne", "A3", "A5", "Forester", "Impreza", "Golf", "Polo", "Touareg", "6", "RX-7",
+      "ILX", "MDX", "NSX", "RDX", "A4", "RS 5", "RS 7", "5 Series", "7 Series", "M5", "3 Series",
+      "ES 350", "GS 350", "CT 200h"
+    ];
+
+    const bodyType = [
+      "Coupe", "Sedan", "SUV", "Pickup", "Crossover", "Minivan", "Midsize Cars"
     ];
 
 
@@ -75,6 +89,8 @@ function CarSearchWithCarQuery() {
     let detectedMake = null;
     let detectedYear = null;
     let detectedModel = null;
+    let detectedHorsepower = null;
+    let detectedBody = null;
 
     makes.forEach((originalMake) => {
       if (lowerSentence.includes(originalMake.toLowerCase())) {
@@ -88,21 +104,40 @@ function CarSearchWithCarQuery() {
     }
 
     models.forEach((originalModel) => {
-      if (lowerSentence.includes(originalModel.toLowerCase())) {
-        detectedModel = originalModel;
+    if (lowerSentence.includes(originalModel.toLowerCase())) {
+      detectedModel = originalModel;
+    }
+
+    const hpMatch = sentence.match(/more than (\d+)\s*horsepower/i);
+    if (hpMatch) {
+      detectedHorsepower =  parseInt(hpMatch[1]);
+    }
+    });
+
+    bodyType.forEach((originalBody) => {
+      if (lowerSentence.includes(originalBody.toLowerCase())) {
+        detectedBody = originalBody;
       }
     });
 
-    return { make: detectedMake, year: detectedYear, model: detectedModel };
+    return { make: detectedMake, year: detectedYear, model: detectedModel, minHorsepower: detectedHorsepower, bodyType: detectedBody };
   };
 
   return (
     <div className="app-container">
-      <div className="ribbon"> 
+      <BrowserRouter>
+      
+      <Ribbon>
+
+        <Routes>
+          <Route path="/" element={<CarSearchWithCarQuery />} >
+            <Route path="/about" element={<About />} />
+            <Route path="/comparison" element={<Comparison />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
+        </Routes>
         
-        <h3>🚗 Car Search System</h3>
-        
-      </div>
+      </Ribbon>
       
       <div className="search-container">
         <input
@@ -148,6 +183,7 @@ function CarSearchWithCarQuery() {
           </ul>
         </div>
       )}
+      </BrowserRouter>
     </div>
   );
 

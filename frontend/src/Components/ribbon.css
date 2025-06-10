@@ -1,0 +1,42 @@
+.ribbon-link.active {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.ribbon {
+  position: sticky;
+  top: 0;
+  width: 96%;
+  background-color: #1e1e1e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.ribbon-left {
+  font-size: 24px;
+  color: white;
+}
+
+.ribbon-logo {
+  font-weight: bold;
+}
+
+.ribbon-right {
+  display: flex;
+  gap: 30px;
+}
+
+.ribbon-link {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.2s ease-in-out;
+}
+
+.ribbon-link:hover {
+  color: #ff9800;
+}
