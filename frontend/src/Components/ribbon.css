@@ -6,7 +6,6 @@
 .ribbon {
   position: sticky;
   top: 0;
-  width: 96%;
   background-color: #1e1e1e;
   display: flex;
   justify-content: space-between;
@@ -39,4 +38,18 @@
 
 .ribbon-link:hover {
   color: #ff9800;
+}
+
+.ribbon-logo {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.ribbon-logo:visited,
+.ribbon-logo:hover,
+.ribbon-logo:active {
+  text-decoration: none;
+  color: inherit;
 }

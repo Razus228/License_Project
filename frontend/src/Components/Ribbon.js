@@ -6,7 +6,7 @@ function Ribbon() {
   return (
     <div className="ribbon">
       <div className="ribbon-left">
-        <span className="ribbon-logo">🚗</span>
+        <span className="ribbon-logo"><Link to="/" className="ribbon-logo">🚗 Be Intelligent</Link></span>
       </div>
       <div className="ribbon-right">
         <Link to="/" className="ribbon-link">Search</Link>
