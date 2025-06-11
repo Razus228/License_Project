@@ -18,8 +18,8 @@ const About = () => {
             time, and in some cases, poor purchasing decisions.
           </p>
           <p>
-            That’s where the <strong>Intelligent Vehicle Search System</strong>{" "}
-            comes in. My platform is designed to change the way people search
+            That’s where the My App {" "}
+            comes in handy. My platform is designed to change the way people search
             for vehicles in the Moldovan market by introducing something truly
             innovative and user-centric. By leveraging Natural Language
             Processing (NLP) and intelligent filtering mechanisms, our search
