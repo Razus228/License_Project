@@ -1,127 +1,134 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../index.css";
-// import Search from "./Components/SearchComponent/Search";
-
-
 
 function CarSearchWithCarQuery() {
   const [query, setQuery] = useState("");
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
+  const [carMakes, setCarMakes] = useState([]);
+  const [carModels, setCarModels] = useState([]);
 
-  const handleSearch = async () => {
-  setLoading(true);
-  const { make, year, model, minHorsepower, bodyType } = extractKeywords(query);
+  // Fetch car makes
+  useEffect(() => {
+    const fetchMakes = async () => {
+      try {
+        const response = await fetch(
+          "https://cors-anywhere.herokuapp.com/https://www.carqueryapi.com/api/0.3/?cmd=getMakes"
+        );
+        const text = await response.text();
+        const cleanText = text.replace("var carquery = ", "").replace(/;\s*$/, "");
+        const data = JSON.parse(cleanText);
+        const makes = data.Makes.map((m) => m.make_display);
+        setCarMakes(makes);
+      } catch (error) {
+        console.error("Failed to fetch car makes", error);
+      }
+    };
 
-  if (!make) {
-    alert("Please include a car brand (like Toyota, Ford, BMW).");
-    setLoading(false);
-    return;
-  }
+    fetchMakes();
+  }, []);
 
-  try {
-    let url = `https://www.carqueryapi.com/api/0.3/?cmd=getTrims&make=${encodeURIComponent(make)}`;
-    
-    if (year) {
-      url += `&year=${year}`;
-    }
+  // Fetch car models
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch(
+          "https://cors-anywhere.herokuapp.com/https://www.carqueryapi.com/api/0.3/?cmd=getModels"
+        );
+        const text = await response.text();
+        const cleanText = text.replace("var carquery = ", "").replace(/;\s*$/, "");
+        const data = JSON.parse(cleanText);
+        const models = data.Models.map((m) => m.model_name);
+        setCarModels(models);
+      } catch (error) {
+        console.error("Failed to fetch car models", error);
+      }
+    };
 
-    if (model) {
-      url += `&model=${encodeURIComponent(model)}`;
-    }
+    fetchModels();
+  }, []);
 
-    const response = await fetch(
-      `https://cors-anywhere.herokuapp.com/${url}`
-    );
-    const textData = await response.text();
-    const cleanText = textData
-      .replace("var carquery = ", "")
-      .replace(/;\s*$/, "");
-    const data = JSON.parse(cleanText);
+    const extractKeywords = (sentence) => {
+        const bodyTypes = ["Coupe", "Sedan", "SUV", "Pickup", "Crossover", "Minivan", "Midsize Cars"];
+        const lowerSentence = sentence.toLowerCase();
 
-    let results = data.Trims || [];
+        const detectedMake = carMakes.find((make) =>
+            lowerSentence.includes(make.toLowerCase())
+        );
 
-    if (minHorsepower) {
-      results = results.filter((car) => parseInt(car.model_engine_power_ps) > minHorsepower);
-    }
+        let detectedModel = null;
+        if (detectedMake) {
+            const makeIndex = lowerSentence.indexOf(detectedMake.toLowerCase());
+            const afterMake = lowerSentence.slice(makeIndex + detectedMake.length).trim().split(" ");
+            if (afterMake.length > 0) {
+            detectedModel = afterMake[0];
+            }
+        }
 
-    if (bodyType) {
-      results = results.filter((car) => String(car.model_body) === bodyType);
-    }
+        const yearMatch = sentence.match(/\b(19|20)\d{2}\b/);
+        const detectedYear = yearMatch ? yearMatch[0] : null;
 
-    setCars(results);
-    setSelectedCar(null);
-  } catch (error) {
-    console.error("Error fetching cars:", error);
-  } finally {
-    setLoading(false);
-  }
+        const hpMatch = sentence.match(/more than (\d+)\s*horsepower/i);
+        const detectedHorsepower = hpMatch ? parseInt(hpMatch[1]) : null;
+
+        const detectedBody = bodyTypes.find((body) =>
+            lowerSentence.includes(body.toLowerCase())
+        );
+
+    return {
+        make: detectedMake,
+        model: detectedModel,
+        year: detectedYear,
+        minHorsepower: detectedHorsepower,
+        bodyType: detectedBody,
+  };
 };
 
+  const handleSearch = async () => {
+    setLoading(true);
+    const { make, year, model, minHorsepower, bodyType } = extractKeywords(query);
 
-  const extractKeywords = (sentence) => {
-    const makes = [
-      "Toyota", "Honda", "Ford", "Chevrolet", "Nissan",
-      "BMW", "Mercedes-Benz", "Audi", "Kia", "Hyundai",
-      "Dodge", "Acura", "Porsche", "Subaru", "Volkswagen",
-      "Mazda", "Lexus"
-    ];
+    if (!make) {
+      alert("Please include a car brand (like Toyota, Ford, BMW).");
+      setLoading(false);
+      return;
+    }
 
-    const models = [
-      "Corolla", "Camry", "Avalon", "Civic", "Accord", "CR-V", "Mustang", "Explorer", "Optima", "Rio",
-      "F-150", "Malibu", "Altima", "370Z", "Maxima", "X5", "X3", "C-Class", "A4", "Soul", "Elantra", "4Runner",
-      "Viper", "Cayenne", "A3", "A5", "Forester", "Impreza", "Golf", "Polo", "Touareg", "6", "RX-7",
-      "ILX", "MDX", "NSX", "RDX", "A4", "RS 5", "RS 7", "5 Series", "7 Series", "M5", "3 Series",
-      "ES 350", "GS 350", "CT 200h"
-    ];
+    try {
+      let url = `https://www.carqueryapi.com/api/0.3/?cmd=getTrims&make=${encodeURIComponent(make)}`;
+      if (year) url += `&year=${year}`;
+      if (model) url += `&model=${encodeURIComponent(model)}`;
 
-    const bodyType = [
-      "Coupe", "Sedan", "SUV", "Pickup", "Crossover", "Minivan", "Midsize Cars"
-    ];
+      const response = await fetch(
+        `https://cors-anywhere.herokuapp.com/${url}`
+      );
+      const textData = await response.text();
+      const cleanText = textData.replace("var carquery = ", "").replace(/;\s*$/, "");
+      const data = JSON.parse(cleanText);
 
-
-    const lowerSentence = sentence.toLowerCase();
-    let detectedMake = null;
-    let detectedYear = null;
-    let detectedModel = null;
-    let detectedHorsepower = null;
-    let detectedBody = null;
-
-    makes.forEach((originalMake) => {
-      if (lowerSentence.includes(originalMake.toLowerCase())) {
-        detectedMake = originalMake;
+      let results = data.Trims || [];
+      if (minHorsepower) {
+        results = results.filter((car) => parseInt(car.model_engine_power_ps) > minHorsepower);
       }
-    });
 
-    const yearMatch = sentence.match(/\b(19|20)\d{2}\b/);
-    if (yearMatch) {
-      detectedYear = yearMatch[0];
-    }
-
-    models.forEach((originalModel) => {
-    if (lowerSentence.includes(originalModel.toLowerCase())) {
-      detectedModel = originalModel;
-    }
-
-    const hpMatch = sentence.match(/more than (\d+)\s*horsepower/i);
-    if (hpMatch) {
-      detectedHorsepower =  parseInt(hpMatch[1]);
-    }
-    });
-
-    bodyType.forEach((originalBody) => {
-      if (lowerSentence.includes(originalBody.toLowerCase())) {
-        detectedBody = originalBody;
+      if (bodyType) {
+        results = results.filter((car) => String(car.model_body) === bodyType);
       }
-    });
 
-    return { make: detectedMake, year: detectedYear, model: detectedModel, minHorsepower: detectedHorsepower, bodyType: detectedBody };
+      setCars(results);
+      setSelectedCar(null);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="app-container">
-      
+      <h1 className="text-above">See for yourself!!!</h1>
+
       <div className="search-container">
         <input
           type="text"
@@ -168,8 +175,6 @@ function CarSearchWithCarQuery() {
       )}
     </div>
   );
-
 }
-
 
 export default CarSearchWithCarQuery;

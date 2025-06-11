@@ -1,0 +1,79 @@
+.login-page {
+  background-color: #f8f8f8; /* Consistent bright background */
+  min-height: calc(100vh - 60px); /* Adjust for sticky ribbon height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px; /* Add some padding for small screens */
+  box-sizing: border-box;
+}
+
+.login-box {
+  background-color: #fff; /* Solid white background for clarity */
+  padding: 40px; /* Increased padding */
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); /* More pronounced shadow */
+  width: 100%;
+  max-width: 420px; /* Slightly larger max-width */
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+  border: 1px solid #eee; /* Subtle border */
+}
+
+.login-box h2 {
+  margin-bottom: 30px; /* More space */
+  font-size: 2rem; /* Larger heading */
+  color: #222; /* Darker text */
+}
+
+.login-input {
+  width: calc(100% - 24px); /* Account for padding */
+  padding: 14px 12px; /* More padding */
+  margin-bottom: 18px; /* More space */
+  border: 1px solid #dcdcdc; /* Lighter border */
+  border-radius: 8px;
+  font-size: 1.05rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #3a86ff; /* Sky blue focus */
+  box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px 15px; /* More padding */
+  background-color: #ff9800; /* Warm orange for action */
+  color: white;
+  font-size: 1.1rem; /* Larger font */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px; /* More space */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 600;
+}
+
+.login-button:hover {
+  background-color: #e68900; /* Darker orange on hover */
+  transform: translateY(-2px);
+}
+
+.signup-link {
+  margin-top: 20px; /* More space */
+  font-size: 1rem;
+  color: #555;
+}
+
+.signup-link a {
+  color: #3a86ff; /* Sky blue for links */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}

@@ -15,7 +15,7 @@ function LayoutWithRibbon() {
     <>
       {showRibbon && <Ribbon />}
       <Routes>
-        <Route path="/search" element={<CarSearchWithCarQuery />} />
+        <Route path="/search" See for yourself element={<CarSearchWithCarQuery />} />
         <Route path="/about" element={<About />} />
         <Route path="/comparison" element={<Comparison />} />
         <Route path="/login" element={<Login />} />

@@ -3,43 +3,64 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Full viewport height */
-  padding-left: 60px;
-  padding-right: 60px;
-  padding-bottom: 0px;
-  padding-top: 0px;
-  background: linear-gradient(to right, #f4f4f4, #dceeff);
+  height: 100vh; /* Adjust for sticky ribbon height */
+  padding: 40px; /* Add overall padding */
+  background: linear-gradient(to bottom right, #e0f2ff, #f0f8ff); /* Brighter sky blue gradient */
   text-align: center;
+  box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .main-page h1 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
+  font-size: 3em; /* Larger heading */
+  margin-bottom: 25px; /* More space */
+  color: #1a1a1a; /* Darker text for contrast */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
 }
 
 .main-page p {
-  font-size: 1.2em;
-  margin-bottom: 40px;
-  max-width: 600px;
+  font-size: 1.3em; /* Larger paragraph text */
+  margin-bottom: 50px; /* More space */
+  max-width: 700px; /* Wider paragraph for better flow */
+  color: #444;
+  line-height: 1.6;
 }
 
 .main-buttons {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 25px; /* Increased gap */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .main-buttons button {
-  padding: 12px 20px;
-  font-size: 1em;
+  padding: 14px 28px; /* More padding */
+  font-size: 1.15em; /* Larger font */
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px; /* More rounded */
   border: none;
-  background-color: #3a86ff;
+  background-color: #3a86ff; /* Sky blue */
   color: white;
-  transition: 0.3s;
+  transition: 0.3s ease, transform 0.2s ease; /* Added transform transition */
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Subtle shadow */
 }
 
 .main-buttons button:hover {
-  background-color: #265fad;
+  background-color: #265fad; 
+  transform: translateY(-3px); 
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15); 
+}
+
+
+@media (max-width: 768px) {
+  .main-page h1 {
+    font-size: 2.2em; 
+  }
+  .main-page p {
+    font-size: 1.1em; 
+  }
+  .main-buttons button {
+    font-size: 1em; 
+    padding: 12px 20px;
+  }
 }

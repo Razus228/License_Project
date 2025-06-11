@@ -1,0 +1,42 @@
+.comparison-container {
+  display: flex;
+  justify-content: center; /* Center the columns */
+  padding: 30px;
+  gap: 30px; /* Adjusted gap */
+  background-color: #f8f8f8; /* Consistent bright background */
+  flex-wrap: wrap;
+  min-height: calc(100vh - 60px); /* Adjust for sticky ribbon height */
+  box-sizing: border-box;
+}
+
+.comparison-column {
+  flex: 1;
+  min-width: 380px; /* Adjusted min-width for better responsiveness */
+  max-width: 550px; /* Max width for each column */
+  background-color: #fff;
+  padding: 25px; /* Increased padding */
+  border-radius: 12px; /* Consistent border radius */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Consistent shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+}
+
+.comparison-column h3 {
+  color: #222; /* Darker heading color */
+  font-size: 1.6em;
+  margin-bottom: 25px; /* More space below heading */
+  width: 100%; /* Ensure heading takes full width for centering */
+}
+
+/* Ensure the CarSearchWithCarQuery component respects column width */
+.comparison-column .app-container {
+  padding: 0; /* Remove internal padding from CarSearchWithCarQuery if present */
+  width: 100%; /* Take full width of the column */
+}
+
+@media (max-width: 900px) {
+  .comparison-column {
+    min-width: 90%; /* On smaller screens, allow columns to take more width */
+  }
+}
