@@ -1,18 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "./ribbon.css";
+import { NavLink } from "react-router-dom";
+import "./Ribbon.css";
 
 function Ribbon() {
   return (
     <div className="ribbon">
-      <div className="ribbon-left">
-        <span className="ribbon-logo"><Link to="/" className="ribbon-logo">🚗 Be Intelligent</Link></span>
-      </div>
-      <div className="ribbon-right">
-        <Link to="/" className="ribbon-link">Search</Link>
-        <Link to="/about" className="ribbon-link">About</Link>
-        <Link to="/comparison" className="ribbon-link">Comparison</Link>
-        <Link to="/login" className="ribbon-link">Login</Link>
+      <span className="ribbon-logo">
+        <NavLink to="/" className="no-link-style">🚗 Be Intelligent</NavLink>
+      </span>
+      <div className="ribbon-options">
+        <NavLink to="/search" className={({ isActive }) => isActive ? "active" : ""}>Search</NavLink>
+        <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
+        <NavLink to="/comparison" className={({ isActive }) => isActive ? "active" : ""}>Comparison</NavLink>
+        <NavLink to="/login" className={({ isActive }) => isActive ? "active" : ""}>Login</NavLink>
       </div>
     </div>
   );

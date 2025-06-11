@@ -1,29 +1,36 @@
-import "./index.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import MainPage from "./Components/MainPage";
 import CarSearchWithCarQuery from "./Components/CarSearchWithCarQuery";
-import Ribbon from "./Components/Ribbon";
 import About from "./Components/About";
-import Login from "./Components/Login";
 import Comparison from "./Components/Comparison";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./Components/Login";
+import Ribbon from "./Components/Ribbon";
 
+function LayoutWithRibbon() {
+  const location = useLocation();
+  const showRibbon = location.pathname !== "/";
 
-export default function App () {
   return (
     <>
-      <BrowserRouter>
-
-        <Ribbon />
-
-        <Routes>
-
-          <Route path="/" element = {<CarSearchWithCarQuery />} />
-          <Route path="about" element = { <About />} />
-          <Route path="comparison" element = { <Comparison />} />
-          <Route path="login" element = { <Login />} />
-          
-        </Routes>
-      </BrowserRouter>
+      {showRibbon && <Ribbon />}
+      <Routes>
+        <Route path="/search" element={<CarSearchWithCarQuery />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/comparison" element={<Comparison />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<MainPage />} />
+      </Routes>
     </>
   );
 }
-  
+
+function App() {
+  return (
+    <Router>
+      <LayoutWithRibbon />
+    </Router>
+  );
+}
+
+export default App;
